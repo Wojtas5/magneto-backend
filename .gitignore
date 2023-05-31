@@ -1,3 +1,7 @@
+# Custom
+measurements/*
+calibrations/*
+
 # Logs
 logs
 *.log
