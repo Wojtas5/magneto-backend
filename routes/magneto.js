@@ -8,16 +8,18 @@ var lerp = require('lerp')
 const MEASUREMENTS_FOLDER = 'measurements/';
 const CALIBRATIONS_FOLDER = 'calibrations/';
 
+let lastPosition = null;
+
 router.get('/calibration/size', function(req, res, next) {
     var files = fs.readdirSync(CALIBRATIONS_FOLDER);
-    var measurements_files = files.filter(function(file) {
+    var calibration_files = files.filter(function(file) {
         return file.startsWith('calibration_');
     });
 
-    if (measurements_files.length == 0) {
+    if (calibration_files.length == 0) {
         res.status(200).send('0');
     } else {
-        var latest_file = measurements_files.reduce(function(prev, curr) {
+        var latest_file = calibration_files.reduce(function(prev, curr) {
             var prevStats = fs.statSync(CALIBRATIONS_FOLDER + prev);
             var currStats = fs.statSync(CALIBRATIONS_FOLDER + curr);
             return prevStats.mtime > currStats.mtime ? prev : curr;
@@ -29,15 +31,15 @@ router.get('/calibration/size', function(req, res, next) {
 
 router.get('/calibration', function(req, res, next) {
     var files = fs.readdirSync(CALIBRATIONS_FOLDER);
-    var measurements_files = files.filter(function(file) {
+    var calibration_files = files.filter(function(file) {
         return file.startsWith('calibration_');
     });
 
-    if (measurements_files.length == 0) {
+    if (calibration_files.length == 0) {
         res.status(200).send('No calibration data available');
     } else {
-        console.log(measurements_files);
-        var latest_file = measurements_files.reduce(function(prev, curr) {
+        console.log(calibration_files);
+        var latest_file = calibration_files.reduce(function(prev, curr) {
             var prevStats = fs.statSync(CALIBRATIONS_FOLDER + prev);
             var currStats = fs.statSync(CALIBRATIONS_FOLDER + curr);
             return prevStats.mtime > currStats.mtime ? prev : curr;
@@ -49,20 +51,53 @@ router.get('/calibration', function(req, res, next) {
 });
 
 router.get('/position', (req, res) => {
-    const position = req.session.position;
-
-    if (position) {
-        res.send(position);
+    if (lastPosition) {
+        res.send(lastPosition);
     } else {
         res.status(404).send('No position data found.');
     }
+});
+
+router.get('/measurements/list', function(req, res, next) {
+    var files = fs.readdirSync(MEASUREMENTS_FOLDER);
+    var measurements_files = files.filter(function(file) {
+        return file.startsWith('measurements_');
+    });
+
+    res.status(200).send(measurements_files);
+});
+
+router.get('/calibration/list', function(req, res, next) {
+    var files = fs.readdirSync(CALIBRATIONS_FOLDER);
+    var calibration_files = files.filter(function(file) {
+        return file.startsWith('calibration_');
+    });
+
+    res.status(200).send(calibration_files);
+});
+
+router.get('/measurements/:filename', (req, res) => {
+    const { filename } = req.params;
+    const absolute_meas_path = "C:\\Users\\web_d\\Desktop\\repo\\magneto-backend\\measurements\\";
+    const filePath = absolute_meas_path + filename;
+  
+    res.sendFile(filePath);
+});
+
+router.get('/calibrations/:filename', (req, res) => {
+    const { filename } = req.params;
+    const absolute_calib_path = "C:\\Users\\web_d\\Desktop\\repo\\magneto-backend\\calibrations\\";
+    const filePath = absolute_calib_path + filename;
+
+    res.sendFile(filePath);
 });
 
 router.use(bodyParser.text());
 
 router.post('/position', (req, res) => {
     const position = req.body;
-    req.session.position = position;
+    lastPosition = position;
+
     res.status(200).send('Position saved successfully.');
 });
 
@@ -85,8 +120,6 @@ router.post('/measurements', function(req, res, next) {
 
     res.status(200).send('OK');
 });
-
-module.exports = router;
 
 function calibrate(measurements_path) {
     var date = new Date();
@@ -170,3 +203,5 @@ function linearInterpolation(dataArray) {
 
     return dataArray;
 }
+
+module.exports = router;
