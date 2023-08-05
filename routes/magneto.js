@@ -38,7 +38,6 @@ router.get('/calibration', function(req, res, next) {
     if (calibration_files.length == 0) {
         res.status(200).send('No calibration data available');
     } else {
-        console.log(calibration_files);
         var latest_file = calibration_files.reduce(function(prev, curr) {
             var prevStats = fs.statSync(CALIBRATIONS_FOLDER + prev);
             var currStats = fs.statSync(CALIBRATIONS_FOLDER + curr);
