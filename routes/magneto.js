@@ -104,18 +104,30 @@ router.post('/measurements', function(req, res, next) {
     var date = new Date();
     var file_date = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() + '-' + date.getHours() + '-' + date.getMinutes();
     var filename = MEASUREMENTS_FOLDER + 'measurements_' + file_date + '.csv';
-    var file = fs.createWriteStream(filename)
-        .on('error', function(err) {
-            console.log(err);
-            res.status(500).send('Internal server error');
-        })
-        .on('close', function() {
-            calibrate(filename);
-        });
+    var calib_filename = CALIBRATIONS_FOLDER + 'calibration_' + file_date + '.csv';
+    // var file = fs.createWriteStream(filename)
+    //     .on('error', function(err) {
+    //         console.log(err);
+    //         res.status(500).send('Internal server error');
+    //     })
+    //     .on('close', function() {
+    //         calibrate(filename);
+    //     });
 
-    file.write('position,X1,Y1,Z1,X2,Y2,Z2,X3,Y3,Z3,X4,Y4,Z4,X5,Y5,Z5,X6,Y6,Z6,X7,Y7,Z7,X8,Y8,Z8,X9,Y9,Z9,X10,Y10,Z10,X11,Y11,Z11\n');
-    file.write(req.body);
-    file.end();
+    // file.write('position,X1,Y1,Z1,X2,Y2,Z2,X3,Y3,Z3,X4,Y4,Z4,X5,Y5,Z5,X6,Y6,Z6,X7,Y7,Z7,X8,Y8,Z8,X9,Y9,Z9,X10,Y10,Z10,X11,Y11,Z11\n');
+    // file.write(req.body);
+    // file.end();
+
+    fs.copyFile("fake/measurements_2023-4-19-23-35.csv", filename, (err) => {
+        if (err) {
+          console.log("Error Found:", err);
+        }
+    });
+    fs.copyFile("fake/calibration_2023-4-19-23-35.csv", calib_filename, (err) => {
+        if (err) {
+          console.log("Error Found:", err);
+        }
+    });
 
     res.status(200).send('OK');
 });
