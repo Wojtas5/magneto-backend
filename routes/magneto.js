@@ -102,7 +102,7 @@ router.post('/position', (req, res) => {
 
 router.post('/measurements', function(req, res, next) {
     var date = new Date();
-    var file_date = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate() + '-' + date.getHours() + '-' + date.getMinutes();
+    var file_date = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() + '-' + date.getHours() + '-' + date.getMinutes();
     var filename = MEASUREMENTS_FOLDER + 'measurements_' + file_date + '.csv';
     var file = fs.createWriteStream(filename)
         .on('error', function(err) {
@@ -122,7 +122,7 @@ router.post('/measurements', function(req, res, next) {
 
 function calibrate(measurements_path) {
     var date = new Date();
-    var file_date = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate() + '-' + date.getHours() + '-' + date.getMinutes();
+    var file_date = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() + '-' + date.getHours() + '-' + date.getMinutes();
     var calib_filename = CALIBRATIONS_FOLDER + 'calibration_' + file_date + '.csv';
 
     let df = csvToArray(measurements_path);
