@@ -126,9 +126,9 @@ function calibrate(measurements_path) {
     var calib_filename = CALIBRATIONS_FOLDER + 'calibration_' + file_date + '.csv';
 
     let df = csvToArray(measurements_path);
-    dropColumnsFromArray(df, ['Y1', 'Z1', 'Y2', 'Z2', 'Y3', 'Z3', 'Y4', 'Z4', 'Y5', 'Z5', 'Y6', 'Z6', 'Y7', 'Z7', 'Y8', 'Z8', 'Y9', 'Z9', 'Y10', 'Z10', 'Y11', 'Z11']);
+    dropColumnsFromArray(df, ['Y1', 'Z1', 'Y2', 'Z2', 'Y3', 'Z3', 'Y4', 'Z4', 'Y5', 'Z5', 'Y6', 'Z6', 
+                              'Y7', 'Z7', 'Y8', 'Z8', 'Y9', 'Z9', 'Y10', 'Z10', 'Y11', 'Z11']);
 
-    df = linearInterpolation(df);
     df = linearInterpolation(df);
     df = linearInterpolation(df);
 
