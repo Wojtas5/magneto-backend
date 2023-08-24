@@ -47,8 +47,15 @@ router.get('/calibration', function(req, res, next) {
             return prevStats.mtime > currStats.mtime ? prev : curr;
         });
 
-        var file = fs.readFileSync(CALIBRATIONS_FOLDER + latest_file);
-        res.status(200).send(file);
+        var fileContent = fs.readFileSync(CALIBRATIONS_FOLDER + latest_file, 'utf-8');
+        var lines = fileContent.split('\n');
+
+        if (lines.length > 1) {
+            var filteredContent = lines.slice(1).join('\n');  // Join lines excluding the first one
+            res.status(200).send(filteredContent);
+        } else {
+            res.status(200).send('File contains only one row or is empty');
+        }
     }
 });
 
