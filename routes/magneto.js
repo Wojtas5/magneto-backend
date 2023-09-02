@@ -139,12 +139,12 @@ router.post('/measurements', function(req, res, next) {
     // file.write(req.body);
     // file.end();
 
-    fs.copyFile("fake/measurements_2023-4-19-23-35.csv", filename, (err) => {
+    fs.copyFile("fake/measurements_2023-9-1-21-41.csv", filename, (err) => {
         if (err) {
           console.log("Error Found:", err);
         }
     });
-    fs.copyFile("fake/calibration_2023-4-19-23-35.csv", calib_filename, (err) => {
+    fs.copyFile("fake/calibration_2023-9-1-21-41.csv", calib_filename, (err) => {
         if (err) {
           console.log("Error Found:", err);
         }
